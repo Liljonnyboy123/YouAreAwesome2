@@ -20,6 +20,7 @@ struct ContentView: View {
     
     var body: some View {
         
+        
         VStack {
             Text(message)
                 .font(.largeTitle)
@@ -42,52 +43,54 @@ struct ContentView: View {
             Spacer()
             
             Button("Show Message") {
-                    let messages = ["You Are Awesome!",
-                                    "When the Genius Bar Needs Help, They Call You!",
-                                    "You Are Great",
-                                    "You Are Fantastic!"
-                                    , "Fabulous? That's You!",
-                                    "You Make Me Smile!"]
-                    
-                    var messageNumber: Int
-                    repeat{
-                        messageNumber = Int.random(in: 0...messages.count-1)
-                    } while messageNumber == lastMessageNumber
-                    message = messages[messageNumber]
-                    lastMessageNumber = messageNumber
+                let messages = ["You Are Awesome!",
+                                "When the Genius Bar Needs Help, They Call You!",
+                                "You Are Great",
+                                "You Are Fantastic!",
+                                "Fabulous? That's You!",
+                                "You Make Me Smile!"]
+                
+                var messageNumber: Int
+                repeat {
+                    messageNumber = Int.random(in: 0...messages.count-1)
+                } while messageNumber == lastMessageNumber
+                message = messages[messageNumber]
+                lastMessageNumber = messageNumber
 
-                var imageNumber = Int
-                    repeat {
-                        imageNumber = Int.random(in: 0...(numberOfImages-1))
-                    } while imageNumber == lastImageNumber
-                    imageName = "image\(imageNumber)"
-                    lastImageNumber = imageNumber
-                    
-                    var soundNumber: Int
-                    repeat {
-                        soundNumber = Int.random(in: 0...(numberOfSounds-1))
-                    } while soundNumber == lastSoundNumber
+                var imageNumber: Int
+                repeat {
+                    imageNumber = Int.random(in: 0...(numberOfImages-1))
+                } while imageNumber == lastImageNumber
+                imageName = "image\(imageNumber)"
+                lastImageNumber = imageNumber
+                
+                var soundNumber: Int
+                repeat {
+                    soundNumber = Int.random(in: 0...(numberOfSounds-1))
+                } while soundNumber == lastSoundNumber
                 lastSoundNumber = soundNumber
-                    let soundName = "sound\(soundNumber)"
-                    
-                    guard let soundFile = NSDataAsset(name: soundName) else {
-                        print("Could not read file named \(soundName)")
-                        return
-                    }
-                    do {
-                        audioPlayer = try AVAudioPlayer(data: soundFile.data)
-                        audioPlayer.play()
-                    } catch {
-                        print("ERROR: \(error.localizedDescription) creating audioPlayer")
-
-                    }
-                }
-                .buttonStyle(.borderedProminent)
-                .font(.title2)
-            }
+                let soundName = "sound\(soundNumber)"
+                
+                playSound(soundName: soundName)
+                    .buttonStyle(.borderedProminent)
+            .font(.title2)
         }
         .padding()
     }
+        func playSound(soundName: String) {
+        guard let soundFile = NSDataAsset(name: soundName) else {
+            print("Could not read file named \(soundName)")
+            return
+        }
+        do {
+            audioPlayer = try AVAudioPlayer(data: soundFile.data)
+            audioPlayer.play()
+        } catch {
+            print("ERROR: \(error.localizedDescription) creating audioPlayer")
+        }
+    }
+    }
+}
 
 #Preview {
     ContentView()
